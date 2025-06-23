@@ -454,5 +454,5 @@ After configuring the system parameters, run Replicant with the `--general` opti
 --general conf/general/general.yaml \
 --extractor conf/src/oracle.yaml \
 --applier conf/dst/singlestore.yaml \
---replace-existing --overwrite --id repl1 --resume
+--overwrite --id repl1 --resume
 ```

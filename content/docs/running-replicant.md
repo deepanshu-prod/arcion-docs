@@ -130,59 +130,8 @@ For example, for the command  `./bin/replicant infer-schemas conf/conn/oracle_sr
 
 Before transferring the database content, it is recommended to examine the schemas on the destination and tailor them to the your specific needs by inferring schemas. Such modified inferred schemas file can be supplied to replicant through `--dst-schemas switch`.
 
-## Write modes
-
-If a collision occurs at the destination system, Replicant by default warns the user and exits with an error to preserve the existing data at the destination. If probability of collision exists for some data, you can resolve the possible error by providing the appropriate schemas file for the target database.
-
-Instead of providing a schemas file, you can specify a global rule when you start Replicant. These rules dictate different modes of writing data to the target database. You can specify a write mode by using the corresponding CLI flag. 
-
-
-### CLI flags
-The following table lists the supported write modes and the corresponding Replicant CLI flags. Use the CLI flag when you run Replicant to enable a particular write mode.
-
-| Write mode    | CLI flag                |
-| -----------   | -----------             |
-| `APPEND`      | `--append-existing`     |
-| `MERGE`       | `--merge-existing`      |
-| `REPLACE`     | `--replace-existing`    |
-| `SWAP`        | `--swap-existing`       |
-| `TRUNCATE`    | `--truncate-existing`   |
-
-### How write modes work
-
-`APPEND`
-: Replicant appends the data from the source to the existing data at the destination.
-
-`MERGE` _[v21.06.14.9]_
-: If the table exists on the destination database, Replicant merges the source data with the existing destination data _if_ the table has primary key. For tables without primary keys, `--merge-existing` behaves like `--truncate-existing`. 
-
-  `--merge-existing` also preserves destination table schemas.
-
-`REPLACE`
-: If the table exists on the destination, then Replicant recreates the table and replaces the destination data with the source data.
-
-`SWAP` _[v23.08.31.1]_
-: 
-  {{< hint "info" >}}
-  **Note:** `SWAP` write mode is only supported for [Snowflake target]({{< ref "docs/targets/target-setup/snowflake" >}}).
-  {{< /hint >}}
-
-  This write mode performs the following steps:
-
-  1. Replicant creates a temporary table on the target system for each table in the user's [filter]({{< ref "docs/sources/configuration-files/filter-reference" >}}) instead of the actual table.
-  2. The snapshot process inserts the data into these temporary tables.
-  3. When the snapshot process completes, Replicant performs two things:
-
-     a. Replicant drops the actual table.
-     
-     b. Replicant renames the temporary table to the actual table. Therefore, the temporary table becomes the current live table.
-  4. Real-time replication then starts normally in [`full` replication mode](#replicant-full-mode).
-
-`TRUNCATE`
-: If the table exists in the destination database, Replicant preserves destination table schemas, but replaces the destination data with the source data.
-
 ### Additional flags and features
-- You can provide the `--lazy-init` flag while using `--truncate-existing` or `--replace-existing`. This instructs Replicant to replace the existing data at the last moment. By default, Replicant removes the existing data during Replicant's initialization phase.
+- You can provide the `--lazy-init` flag while using replication mode `full` or `realtime`. This instructs Replicant to replace the existing data at the last moment. By default, Replicant removes the existing data during Replicant's initialization phase.
 - Replicant has another write mode `--synchronize-deletes` that only applies to [delta-snapshot replication](#replicant-delta-snapshot-mode). When you start Replicant in `delta-snapshot` mode with the `--synchronize-deletes` flag, the following events occur:
   - Replicant deletes all rows from a target table that don't exist in the corresponding source table. 
   - Replicant shuts down after finishing the row synchronization. 
@@ -382,7 +331,7 @@ Replicant has the following four replication options:
     --applier conf/dst/singlestore.yaml \
     --filter filter/oracle_filter.yaml \
     --map mapper/oracle_to_singlestore.yaml \
-    --replace-existing --resume
+    --resume
     ```
 <!--   * **continue-inconsistent-post-failure**: When this option is specified, replicant logs a failed transaction in a failed_txn table and continues replication without stopping. Note that using this option may introduce inconsistencies in the destination database. -->
 

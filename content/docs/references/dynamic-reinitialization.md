@@ -43,7 +43,7 @@ A user might perform some schema modification operations—for example, add, dro
     --statistics conf/statistics/statistics.yaml \
     --filter filter/greenplum_filter.yaml \
     --map mapper/greenplum_to_singlestore.yaml \
-    --replace-existing --overwrite --id repl1 --resume
+    --overwrite --id repl1 --resume
     ```
 2. Stop the replication by pressing <kbd>Control</kbd> + <kbd>C</kbd>.
 3. Set up the [reinitialization configuration file](#the-reinitialization-configuration-parameters) properly.
@@ -58,6 +58,6 @@ A user might perform some schema modification operations—for example, add, dro
     --statistics conf/statistics/statistics.yaml \
     --filter filter/greenplum_filter.yaml \
     --map mapper/greenplum_to_singlestore.yaml \
-    --replace-existing --overwrite --id repl1 --resume
+    --overwrite --id repl1 --resume
     --reinitialize conf/reinit/db_reinit.yaml
     ```
