@@ -33,7 +33,7 @@ bookSearchExclude: true
 2. Edit the following job configuration as necessary:
     ```YAML
     add-jobs:
-      job-command: "/home/replicate/core/bin/replicate full /home/replicate/core/conf/conn/oracle_src.yaml /home/replicate/core/conf/conn/memsql_dst.yaml --extractor /home/replicate/core/conf/src/oracle.yaml --applier /home/replicate/core/conf/dst/memsql.yaml --replace-existing --filter /home/replicate/core/filter/oracle_filter.yaml --metadata /home/replicate/core/conf/metadata/memsql.yaml --general /home/replicate/core/conf/general/general.yaml --distribute /home/replicate/core/conf/distribution/distribution.yaml --id repl1 --overwrite"
+      job-command: "/home/replicate/core/bin/replicate full /home/replicate/core/conf/conn/oracle_src.yaml /home/replicate/core/conf/conn/memsql_dst.yaml --extractor /home/replicate/core/conf/src/oracle.yaml --applier /home/replicate/core/conf/dst/memsql.yaml --filter /home/replicate/core/filter/oracle_filter.yaml --metadata /home/replicate/core/conf/metadata/memsql.yaml --general /home/replicate/core/conf/general/general.yaml --distribute /home/replicate/core/conf/distribution/distribution.yaml --id repl1 --overwrite"
       replicant-id: "repl1" #Replace repl1 with the value of ```--id``` from the job command
       replicant-group: "test_group" #Only applicable if using distributed replication
       host-affinity: "host1" #Replace host1 with the host-id of the intended host in the cluster
