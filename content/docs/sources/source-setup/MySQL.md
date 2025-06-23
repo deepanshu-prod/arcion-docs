@@ -463,7 +463,7 @@ The following shows a sample command for running Replicant:
 --filter filter/mysql_filter.yaml \
 --extractor conf/src/mysql.yaml \
 --metadata conf/metadata/postgresql.yaml \
---replace-existing --id mf2 \
+--id mf2 \
 --overwrite --create-sql
 ```
 
